@@ -1,29 +1,27 @@
 package com.ad.brainshopchatbot
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.ad.brainshopchatbot.adapter.MessageAdapter
 import com.ad.brainshopchatbot.databinding.ActivityMainBinding
 import com.ad.brainshopchatbot.model.Message
-import com.ad.brainshopchatbot.network.ApiService
 import com.ad.brainshopchatbot.network.ResultState
-import com.ad.brainshopchatbot.network.RetrofitService
 import com.ad.brainshopchatbot.repository.BaseRepository.Companion.getErrorMessage
-import com.ad.brainshopchatbot.util.Formatter.formatMessage
+import com.ad.brainshopchatbot.util.Formatter
 import com.ad.brainshopchatbot.util.showAlertDialog
 import com.ad.brainshopchatbot.viewmodel.ChatViewModel
-import com.ad.brainshopchatbot.viewmodel.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private lateinit var chatViewModel: ChatViewModel
+    private val chatViewModel: ChatViewModel by viewModels()
 
-    private lateinit var messageAdapter: MessageAdapter
+    private val messageAdapter: MessageAdapter = MessageAdapter()
 
     private val messageList = mutableListOf<Message>()
 
@@ -32,7 +30,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initViewModel()
         binding.initUI()
         observer()
     }
@@ -40,9 +37,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun ActivityMainBinding.initUI() {
         supportActionBar?.title = getString(R.string.chat_bot)
-        messageAdapter = MessageAdapter()
-        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this@MainActivity)
-        rvMessages.layoutManager = layoutManager
+        rvMessages.layoutManager = LinearLayoutManager(this@MainActivity)
         rvMessages.adapter = messageAdapter
         messageAdapter.submitList(messageList)
 
@@ -54,8 +49,7 @@ class MainActivity : AppCompatActivity() {
                 messageAdapter.notifyItemInserted(position)
                 rvMessages.scrollToPosition(position)
                 etMessage.setText("")
-                val formattedMessage = formatMessage(message)
-                chatViewModel.getBotAnswer(formattedMessage)
+                chatViewModel.getBotAnswer(Formatter.formatMessage(message))
             }
         }
     }
@@ -71,6 +65,7 @@ class MainActivity : AppCompatActivity() {
                         binding.rvMessages.scrollToPosition(position)
                     }
                 }
+
                 is ResultState.InProgress -> {
                 }
 
@@ -81,15 +76,6 @@ class MainActivity : AppCompatActivity() {
                 }
 
             }
-        }
-    }
-
-    private fun initViewModel() {
-        if ((::chatViewModel.isInitialized).not()) {
-            chatViewModel = ViewModelProvider(
-                this@MainActivity,
-                ViewModelFactory(RetrofitService.createService(ApiService::class.java))
-            )[ChatViewModel::class.java]
         }
     }
 }

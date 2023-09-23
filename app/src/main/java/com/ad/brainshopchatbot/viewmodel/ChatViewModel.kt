@@ -6,14 +6,15 @@ import androidx.lifecycle.viewModelScope
 import com.ad.brainshopchatbot.model.BotResponse
 import com.ad.brainshopchatbot.network.ResultState
 import com.ad.brainshopchatbot.repository.ChatRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ChatViewModel(private val repository: ChatRepository) : ViewModel() {
+@HiltViewModel
+class ChatViewModel @Inject constructor(private val repository: ChatRepository) : ViewModel() {
     val botAnswerLiveData = MutableLiveData<ResultState<BotResponse>>()
 
-    fun getBotAnswer(
-        message: String,
-    ) {
+    fun getBotAnswer(message: String) {
         viewModelScope.launch {
             val response = repository.getBotAnswer(message = message)
             response.let {
@@ -21,6 +22,7 @@ class ChatViewModel(private val repository: ChatRepository) : ViewModel() {
                     is ResultState.Success -> it.extractData?.let { list ->
                         botAnswerLiveData.postValue(ResultState.Success(list))
                     }
+
                     else -> botAnswerLiveData.postValue(it)
                 }
             }
