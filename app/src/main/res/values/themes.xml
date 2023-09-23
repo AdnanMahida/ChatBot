@@ -17,6 +17,5 @@
         <item name="fontFamily">@font/poppins</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
-
     </style>
 </resources>
