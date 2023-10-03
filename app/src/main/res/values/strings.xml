@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BrainShopChatBot</string>
+    <string name="app_name">Chat Bot</string>
     <string name="type_a_message">Type a message…</string>
     <string name="chat_bot">Chat Bot</string>
 </resources>

@@ -1,19 +1,47 @@
 package com.ad.brainshopchatbot.util
 
-import android.content.Context
-import android.content.DialogInterface
-import com.ad.brainshopchatbot.R
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.vector.ImageVector
 
-fun Context.showAlertDialog(
-    message: String,
-    setPositiveButton: (DialogInterface) -> Unit
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ShowAlertDialog(
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+    dialogTitle: String,
+    dialogText: String,
+    dismissButton: Boolean = false,
+    icon: ImageVector? = null,
 ) {
-    MaterialAlertDialogBuilder(this)
-        .setTitle(getString(R.string.app_name))
-        .setMessage(message)
-        .setPositiveButton("Ok") { dialog, _ ->
-            setPositiveButton(dialog)
+    AlertDialog(icon = {
+        if (icon != null) {
+            Icon(icon, contentDescription = "Example Icon")
         }
-        .show()
+    }, title = {
+        Text(text = dialogTitle)
+    }, text = {
+        Text(text = dialogText)
+    }, onDismissRequest = {
+        onDismissRequest()
+    }, confirmButton = {
+        TextButton(onClick = {
+            onConfirmation()
+        }) {
+            Text("Ok")
+        }
+    }, dismissButton = {
+        if (dismissButton) {
+            TextButton(onClick = {
+                onDismissRequest()
+            }) {
+                Text("Dismiss")
+            }
+        } else null
+    })
 }
