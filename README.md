@@ -2,6 +2,8 @@
 
 An android app built using [Jetpack (ViewModel)](https://developer.android.com/jetpack?gclid=EAIaIQobChMIhqv0uOGp_QIVyrmWCh2eCw96EAAYASAAEgKu_PD_BwE&gclsrc=aw.ds), [Material Design](https://developer.android.com/develop/ui/views/theming/look-and-feel) and [MVVM architecture](https://developer.android.com/topic/architecture). consumes [BrainShop API](https://brainshop.ai) for chatbot response.
 
+## Jetpack compose support
+For more info check out the -b [compose](https://github.com/AdnanMahida/ChatBot/tree/compose) branch.
 
 ## Download
 Go to the [Releases](https://github.com/AdnanMahida/ChatBot/tree/master/apk) to download the latest APK.
